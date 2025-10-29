@@ -36,6 +36,10 @@ PlayerSpeed2 = 2
 PlayerSpeed3 = 3
 PlayerSpeed4 = 6
 
+GravityScale1 = 2.8
+GravityScale2 = 1.9
+GravityScale3 = 0.1
+
 AutoExitAHK = 1
 key_Reload = Home
 key_EndExitapp = End
@@ -89,7 +93,7 @@ Menu,Tray, Icon, Exit, shell32.dll,28, 16
 Hotkey, *~$%key_Reload%, MetkaMenu4, on
 Hotkey, *~$%key_EndExitapp%, MetkaMenu1, on
 if AutoExitAHK
-	SetTimer, ExitOnGameClose, 3000 	;Автовыход через 3 секунды если нет окна игры или лаунчера
+	SetTimer, ExitOnGameClose, 3000
 Return
 
 
@@ -141,6 +145,107 @@ Sleep 300
 Tooltip
 Return
 
+Numpad1::
+1337flex := new _ClassMemory(GameEXE)
+baseAddress := 1337flex.getProcessBaseAddress(GameEXE)
+GravityScale := 1337flex.Read(baseAddress + offsets.GWorld, "float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+if GravityScale > 0
+1337flex.write(baseAddress + offsets.GWorld, GravityScale1,"float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+1337flex := ""
+Tooltip Gravity 1,round(A_ScreenWidth * .5),0
+Sleep 300
+Tooltip
+Return
+
+Numpad2::
+1337flex := new _ClassMemory(GameEXE)
+baseAddress := 1337flex.getProcessBaseAddress(GameEXE)
+GravityScale := 1337flex.Read(baseAddress + offsets.GWorld, "float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+if GravityScale > 0
+1337flex.write(baseAddress + offsets.GWorld, GravityScale2,"float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+1337flex := ""
+Tooltip Gravity 2,round(A_ScreenWidth * .5),0
+Sleep 300
+Tooltip
+Return
+
+Numpad3::
+1337flex := new _ClassMemory(GameEXE)
+baseAddress := 1337flex.getProcessBaseAddress(GameEXE)
+GravityScale := 1337flex.Read(baseAddress + offsets.GWorld, "float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+if GravityScale > 0
+1337flex.write(baseAddress + offsets.GWorld, GravityScale3,"float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+1337flex := ""
+Tooltip Gravity 3,round(A_ScreenWidth * .5),0
+Sleep 300
+Tooltip
+Return
+
+XButton1::
+Sleep 15
+IfWinNotActive, %WindowFocus%
+	Return
+if !FuncCursorVisible()
+{
+1337flex := new _ClassMemory(GameEXE)
+baseAddress := 1337flex.getProcessBaseAddress(GameEXE)
+GravityScale := 1337flex.Read(baseAddress + offsets.GWorld, "float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+if GravityScale > 0
+1337flex.write(baseAddress + offsets.GWorld, GravityScale3,"float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+1337flex := ""
+while (GetKeyState("XButton1", "P"))
+{
+	sleep 50
+}
+1337flex := new _ClassMemory(GameEXE)
+baseAddress := 1337flex.getProcessBaseAddress(GameEXE)
+GravityScale := 1337flex.Read(baseAddress + offsets.GWorld, "float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+if GravityScale > 0
+1337flex.write(baseAddress + offsets.GWorld, GravityScale1,"float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0x308, 0x150)
+1337flex := ""
+}
+Return
+
+XButton2::
+Sleep 15
+IfWinNotActive, %WindowFocus%
+	Return
+if !FuncCursorVisible()
+{
+1337flex := new _ClassMemory(GameEXE)
+baseAddress := 1337flex.getProcessBaseAddress(GameEXE)
+PlayerSpeed := 1337flex.Read(baseAddress + offsets.GWorld, "float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0xC8)
+if PlayerSpeed > 0.1
+1337flex.write(baseAddress + offsets.GWorld, PlayerSpeed4,"float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0xC8)
+1337flex := ""
+while (GetKeyState("XButton2", "P"))
+{
+	sleep 50
+}
+1337flex := new _ClassMemory(GameEXE)
+baseAddress := 1337flex.getProcessBaseAddress(GameEXE)
+PlayerSpeed := 1337flex.Read(baseAddress + offsets.GWorld, "float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0xC8)
+if PlayerSpeed > 0.1
+1337flex.write(baseAddress + offsets.GWorld, PlayerSpeed1,"float", 0x190, 0x38, 0x0, 0x30, 0x2D0, 0xC8)
+1337flex := ""
+}
+Return
+
+
+;============================Функция: есть курсор мышки - 1, нет курсора - 0
+FuncCursorVisible()
+{
+	StructSize1337 := A_PtrSize + 16
+	VarSetCapacity(InfoStruct1337, StructSize1337)
+	NumPut(StructSize1337, InfoStruct1337)
+	DllCall("GetCursorInfo", UInt, &InfoStruct1337)
+	Result1337 := NumGet(InfoStruct1337, 8)
+	if (Result1337 <> 0)
+		CursorVisible := 1
+	Else
+		CursorVisible := 0
+	Return CursorVisible
+}
 ;=====================================Если игра закрыта то скрипт сам закроется
 ExitOnGameClose() {
     global WindowFocus
@@ -149,13 +254,10 @@ ExitOnGameClose() {
         ExitApp
     }
 }
-
-
 ;============================Меню, Reload
 MetkaMenu4:
 Reload
 Return
-
 ;============================Меню, Отключить все хоткеи, остановить активные потоки
 MetkaMenu3:
 Suspend, Toggle
@@ -175,7 +277,6 @@ Else
 Pause , Toggle, 1
 Exit
 Return
-
 ;============================Меню, выйти
 MetkaMenu1:
 Exitapp
