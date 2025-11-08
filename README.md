@@ -1,4 +1,4 @@
-# DNA-AHK-External v0.1
+# DNA-AHK-External v0.2
 
 External Cheat на AHK для убийцы Варфрейма, собрано из говна и палок с [UC форума](https://www.unknowncheats.me/forum/other-mmorpg-and-strategy/723122-duet-night-abyss-reversal-structs-offsets.html)
 
