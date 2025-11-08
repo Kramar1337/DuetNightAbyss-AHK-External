@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable>
+  <CheatEntries>
+    <CheatEntry>
+      <ID>105508</ID>
+      <Description>"Instant FIsh"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+
+aobscanmodule(INJ_FISH,EM-Win64-Shipping.exe,48 89 08 0F B6 4B 08 88 48 08 E9) // should be unique
+alloc(newmem,$1000,INJ_FISH)
+
+label(code)
+label(return)
+label(Lret)
+
+newmem:
+  // setup
+  push rbx
+  movq rbx,xmm0
+  push rbx
+  movq rbx,xmm1
+  push rbx
+  // comparsion body
+  mov rbx,[rsp+18]
+  cmp rbx,2
+  mov rbx,[rsp+28]
+  add rbx,[rsp+40]
+  cmp rbx,0
+  jne Lret
+  // if (double)rbx &lt; 0.01 or (double)rbx &gt; 5.0 then jmp Lret
+  movq xmm0,rcx
+  mov rbx,(double)0.01
+  movq xmm1,rbx
+  comisd xmm0,xmm1
+  jb Lret
+  jp Lret
+  mov rbx,(double)5.0
+  movq xmm1,rbx
+  comisd xmm0,xmm1
+  ja Lret
+  jp Lret
+  mov rcx,(double)10.0
+  jmp Lret
+Lret:
+  pop rbx
+  movq xmm1,rbx
+  pop rbx
+  movq xmm0,rbx
+  pop rbx
+code:
+  mov [rax],rcx
+  movzx ecx,byte ptr [rbx+08]
+  jmp return
+
+INJ_FISH:
+  jmp newmem
+  nop 2
+return:
+registersymbol(INJ_FISH)
+
+[DISABLE]
+
+INJ_FISH:
+  db 48 89 08 0F B6 4B 08
+
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0EB
+
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0C7: 33 D2           - xor edx,edx
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0C9: 48 89 54 24 20  - mov [rsp+20],rdx
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0CE: E9 AE FE FF FF  - jmp EM-Win64-Shipping.msgpack_unpacker_reset_zone+9F81
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0D3: 48 8B 17        - mov rdx,[rdi]
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0D6: 49 8B 0C 24     - mov rcx,[r12]
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0DA: E8 C1 CE FF FF  - call EM-Win64-Shipping.msgpack_unpacker_reset_zone+6FA0
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0DF: 48 8B D0        - mov rdx,rax
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0E2: F6 40 08 0F     - test byte ptr [rax+08],0F
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0E6: 74 E1           - je EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0C9
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0E8: 48 8B 0B        - mov rcx,[rbx]
+// ---------- INJECTING HERE ----------
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0EB: 48 89 08        - mov [rax],rcx
+// ---------- DONE INJECTING  ----------
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0EE: 0F B6 4B 08     - movzx ecx,byte ptr [rbx+08]
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0F2: 88 48 08        - mov [rax+08],cl
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0F5: E9 46 FE FF FF  - jmp EM-Win64-Shipping.msgpack_unpacker_reset_zone+9F40
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0FA: 8B C3           - mov eax,ebx
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0FC: 8B FB           - mov edi,ebx
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A0FE: C1 E8 10        - shr eax,10
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A101: C1 EF 18        - shr edi,18
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A104: 0F B6 F0        - movzx esi,al
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A107: 84 C0           - test al,al
+EM-Win64-Shipping.msgpack_unpacker_reset_zone+A109: 74 0A           - je EM-Win64-Shipping.msgpack_unpacker_reset_zone+A115
+}
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+</CheatTable>
