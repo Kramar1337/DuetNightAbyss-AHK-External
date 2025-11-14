@@ -1,4 +1,5 @@
 ﻿/*
+123
 https://www.unknowncheats.me/forum/other-mmorpg-and-strategy/723122-duet-night-abyss-reversal-structs-offsets.html
 constexpr int32 GObjects = 0x06AEED80;
 constexpr int32 AppendString = 0x02608350;
